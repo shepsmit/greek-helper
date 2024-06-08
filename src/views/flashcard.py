@@ -4,65 +4,59 @@ from backend.system import FlashcardSet
 from models.utils import FlashCard, FlashCardSide, FlashCardContent
 from views.components.navbar import navbar
 
-def getFlashCardElement(flashcard: FlashCard, side:FlashCardSide):
+def getFlashCardElement(flashcard: FlashCard, side:FlashCardSide, class_str):
     if(side == FlashCardSide.FRONT):
         if(flashcard.front_type == FlashCardContent.IMAGE):
-            return (ui.image(flashcard.front).classes('w-16'))
+            return (ui.image(flashcard.front).classes(class_str))
         elif(flashcard.front_type == FlashCardContent.TEXT):
-            return (ui.label(flashcard.front))
+            return (ui.label(flashcard.front).classes(class_str))
     
     if(side == FlashCardSide.BACK):
         if(flashcard.back_type == FlashCardContent.IMAGE):
-            return (ui.image(flashcard.back).classes('w-16'))
+            return (ui.image(flashcard.back).classes(class_str))
         elif(flashcard.back_type == FlashCardContent.TEXT):
-            return (ui.label(flashcard.back))
+            return (ui.label(flashcard.back).classes(class_str))
 
-class FlashCardButton(ui.button):
-    def __init__(self, container, flashcard: FlashCard, *args, **kwargs) -> None:
+
+class FlashCardContainer(ui.card):
+    def __init__(self, flashcard: FlashCard, class_str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._state = False
-        self.container = container
+        self._side = FlashCardSide.FRONT
         self.flashcard = flashcard
         self.on('click', self.toggle)
+        self.class_str = class_str
+
+        with self: # default for front
+            getFlashCardElement(self.flashcard, self._side, self.class_str)
 
     def toggle(self) -> None:
-        """Toggle the button state."""
-        self._state = not self._state
-        self.container.clear()
-        with self.container:
-            if(self._state):
-                c = getFlashCardElement(self.flashcard, FlashCardSide.FRONT)
-                c.update()
-            else:
-                c = getFlashCardElement(self.flashcard, FlashCardSide.BACK)
-                c.update()
+        """Toggle the container state."""
+        if(self._side == FlashCardSide.FRONT):
+            self._side = FlashCardSide.BACK
+        else:
+            self._side = FlashCardSide.FRONT
+        self.clear()
+        with self:
+            c = getFlashCardElement(self.flashcard, self._side, self.class_str)
+            c.update()
 
         self.update()
 
     def update(self) -> None:
-        self.props(f'color={"green" if self._state else "red"}')
+        # Code here during updates
         super().update()
-
-
 
 class ViewFlashCard():
     def __init__(self):
-
-
         self.setupView()
     
     def loadFlashcards(self):
         fset = FlashcardSet()
         fset.loadFlashcardSet()
 
-        for flashcard in fset.flashcards[:10]:
-            with ui.card():
-                container = ui.row()
-                with container:
-                    print(flashcard.front)
-                    ui.image(flashcard.front).classes('w-16')
-
-                FlashCardButton(container=container, flashcard=flashcard)
+        for f in fset.flashcards[:10]:
+            with ui.card().classes('items-center').tight():
+                FlashCardContainer(flashcard=f, class_str="w-32 h-32 text-center").tight()
 
 
     def setupView(self):
