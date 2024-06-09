@@ -1,29 +1,35 @@
 from models.utils import *
+from backend.greek_parsing import GreekParser
+import csv
 import os
 import re
 
 class FlashCardSet():
-    def __init__(self):
+    def __init__(self, chapter_name):
+        self.greek_parser = GreekParser()
         self.flashcards = []
-        self.chapter = self.loadGreekChapter("1 John 1")
+        self.chapter = self.loadGreekChapter(chapter_name)
+        # self.greek_parser.newLemma("ἀρχή")
 
-    def loadFlashCardSetChapterWords(self):
+    def getFlashCardSetChapterWords(self)-> list:
+        set = []
         for verse_item in self.chapter.verses.items():
             verse_num = verse_item[0]
-            verse = verse_item[1]
-            for word in verse.words:
-                self.flashcards.append(FlashCard(back=verse_num, 
-                                                back_type=FlashCardContent.TEXT, 
-                                                front=word,
-                                                front_type=FlashCardContent.TEXT))
+            set += self.getFlashCardSetVerseWords(verse_num)
+        return set
                 
-    def loadFlashCardSetVerseWords(self, verse_num: int):
+    def getFlashCardSetVerseWords(self, verse_num: int)->list:
+        set = []
         verse = self.chapter.verses[verse_num]
         for word in verse.words:
-            self.flashcards.append(FlashCard(back=verse_num, 
-                                            back_type=FlashCardContent.TEXT, 
-                                            front=word,
-                                            front_type=FlashCardContent.TEXT))
+
+            lemma = self.greek_parser.getLemmaFromWord(word)
+
+            set.append(FlashCard(front=word, 
+                                front_type=FlashCardContent.TEXT, 
+                                back=f'images/{lemma}.png',
+                                back_type=FlashCardContent.IMAGE))
+        return set
             
 
     def loadFlashCardSetImages(self):
@@ -51,3 +57,4 @@ class FlashCardSet():
             c.verses[i+1] = v_new
 
         return(c)
+    
