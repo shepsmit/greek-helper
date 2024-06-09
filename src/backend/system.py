@@ -9,7 +9,7 @@ class FlashCardSet():
         self.greek_parser = GreekParser()
         self.flashcards = []
         self.chapter = self.loadGreekChapter(chapter_name)
-        # self.greek_parser.newLemma("ἀρχή")
+
 
     def getFlashCardSetChapterWords(self)-> list:
         set = []

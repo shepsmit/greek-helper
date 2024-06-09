@@ -52,11 +52,12 @@ class ViewFlashCard():
     
     def loadFlashcards(self):
         fset = FlashCardSet("1 John 1")
-        f_cards = fset.getFlashCardSetChapterWords()
+        fset.greek_parser.newLemma("ἀρχή")
+        # f_cards = fset.getFlashCardSetChapterWords()
 
-        for f in f_cards[:100]:
-            with ui.card().classes('items-center').tight():
-                FlashCardContainer(flashcard=f, class_str="w-32 h-32 text-center").tight()
+        # for f in f_cards[:100]:
+        #     with ui.card().classes('items-center').tight():
+        #         FlashCardContainer(flashcard=f, class_str="w-32 h-32 text-center").tight()
 
 
     def setupView(self):

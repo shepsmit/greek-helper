@@ -1,6 +1,7 @@
 
 import requests
 from bs4 import BeautifulSoup
+from models.utils import InflectedWord
 
 class GreekParser():
     def __init__(self):
@@ -10,23 +11,40 @@ class GreekParser():
         print(f"new lemma: {lemma}")
         # Making a GET request
         r = requests.get(f'https://lexicon.katabiblon.com/index.php?lemma={lemma}')
-
         # check status code for response received
         # success code - 200
-        print(r)
+        if(r.status_code != 200):
+            print(r)
+            return None
 
+        inflected_entries = []
         # Parsing the HTML
         soup = BeautifulSoup(r.content, 'html.parser')
+        table_list = soup.find_all('table')
+        # element_list = soup.find_all('tr')
+        for table in table_list:
+            if("Lemma" in table.get_text()):
+                # Get the table rows
+                entry_list = table.find_all("tr")
+                for e in entry_list:
+                    new_e  = InflectedWord()
+                    # Get the table entries
+                    cols = e.find_all("td")
+                    if(len(cols)>=7):
+                        # print(cols)
+                        # Fill out the new entry with the table columns
+                        new_e.inflection        = cols[1].get_text()
+                        new_e.lemma             = cols[2].get_text()
+                        new_e.uncontracted_form = cols[3].get_text()
+                        new_e.parsing           = cols[4].get_text()
+                        new_e.translation       = cols[5].get_text()
+                        new_e.verse             = cols[6].get_text()
 
-        # s = soup.find_all('form', class_='entry-content')
-        element_list = soup.find_all('table')
-        for element in element_list:
-            if("Lemma" in element.get_text()):
-                print(element)
-        # content = s.find_all('table')
-        # print(s)
-        # content = s.find_all('p')
-
+                        inflected_entries.append(new_e)
+                break # just the first one please (NT only)
+        for entry in inflected_entries:
+            print(entry)
+            print("\n")
 
     def getLemmaFromWord(self, word:str):
         # Find word in database
