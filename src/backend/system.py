@@ -23,7 +23,7 @@ class FlashCardSet():
         verse = self.chapter.verses[verse_num]
         for word in verse.words:
 
-            lemma = self.greek_parser.getLemmaFromWord(word)
+            lemma = self.greek_parser.getLemmaFromInflected(word)['value']
 
             set.append(FlashCard(front=word, 
                                 front_type=FlashCardContent.TEXT, 

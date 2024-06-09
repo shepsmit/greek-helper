@@ -21,14 +21,7 @@ class Chapter:
         for k in self.verses.keys():
             print(f'{k}: {self.verses[k].text}')
 
-@dataclass
-class InflectedWord:
-    inflection: str	= ""
-    lemma: str = ""
-    uncontracted_form: str	= ""
-    parsing: str = ""	
-    translation: str = ""
-    verse: str = ""
+
 
 @dataclass
 class Verse:
