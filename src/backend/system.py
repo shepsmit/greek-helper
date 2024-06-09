@@ -7,7 +7,7 @@ class FlashCardSet():
         self.flashcards = []
         self.chapter = self.loadGreekChapter("1 John 1")
 
-    def loadFlashCardSetWords(self):
+    def loadFlashCardSetChapterWords(self):
         for verse_item in self.chapter.verses.items():
             verse_num = verse_item[0]
             verse = verse_item[1]
@@ -16,6 +16,14 @@ class FlashCardSet():
                                                 back_type=FlashCardContent.TEXT, 
                                                 front=word,
                                                 front_type=FlashCardContent.TEXT))
+                
+    def loadFlashCardSetVerseWords(self, verse_num: int):
+        verse = self.chapter.verses[verse_num]
+        for word in verse.words:
+            self.flashcards.append(FlashCard(back=verse_num, 
+                                            back_type=FlashCardContent.TEXT, 
+                                            front=word,
+                                            front_type=FlashCardContent.TEXT))
             
 
     def loadFlashCardSetImages(self):

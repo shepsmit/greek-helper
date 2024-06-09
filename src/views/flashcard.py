@@ -52,7 +52,7 @@ class ViewFlashCard():
     
     def loadFlashcards(self):
         fset = FlashCardSet()
-        fset.loadFlashCardSetWords()
+        fset.loadFlashCardSetVerseWords(verse_num=1)
 
         for f in fset.flashcards[:10]:
             with ui.card().classes('items-center').tight():
