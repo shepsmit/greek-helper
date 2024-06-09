@@ -1,6 +1,6 @@
 
 from nicegui import ui
-from backend.system import FlashcardSet
+from backend.system import FlashCardSet
 from models.utils import FlashCard, FlashCardSide, FlashCardContent
 from views.components.navbar import navbar
 
@@ -51,8 +51,8 @@ class ViewFlashCard():
         self.setupView()
     
     def loadFlashcards(self):
-        fset = FlashcardSet()
-        fset.loadFlashcardSet()
+        fset = FlashCardSet()
+        fset.loadFlashCardSetWords()
 
         for f in fset.flashcards[:10]:
             with ui.card().classes('items-center').tight():
