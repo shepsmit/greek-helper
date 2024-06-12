@@ -52,7 +52,6 @@ class ViewFlashCard():
     
     def loadFlashcards(self):
         fset = FlashCardSet("1 John 1")
-        # fset.greek_parser.newLemma("ἀρχή")
         f_cards = fset.getFlashCardSetVerseWords(verse_num=1)
 
         for f in f_cards[:100]:

@@ -7,13 +7,29 @@ class DatabaseInterface():
     def __init__(self) -> None:
         pass
 
-    def get_lemma_from_inflected(self, inflected)->str:
+    def convert_to_db_chars(self, word:str)->str:
+
+        word_converted = ""
+        for c in word:
+            new_c = c
+            match ord(c):
+                case 940: new_c = chr(8049) # ά
+                case 972: new_c = chr(8057) # ό
+            
+            word_converted += new_c
+
+        return word_converted
+
+    def get_lemma_from_inflected(self, inflected:str)->str:
         response_dict = {'value': None,
                          'error': SQLliteStatus.SQLLITE_STATUS_OK}
 
         try:
             db = SQL_Database(DB_PATH_NT)
-            db_response = db.run_query(f"SELECT * FROM [inflected] WHERE inflection LIKE '{inflected}' LIMIT 1")
+            print(inflected)
+            inflected_converted = self.convert_to_db_chars(inflected)
+
+            db_response = db.run_query_params("SELECT * FROM [inflected] WHERE inflection REGEXP ?",[f"{inflected_converted},?".encode("utf-8")])
             if(len(db_response)>0):
                 word = InflectedWord()
                 word.parseQuery(db_response[0])

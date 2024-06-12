@@ -27,8 +27,13 @@ class FlashCardSet():
 
             set.append(FlashCard(front=word, 
                                 front_type=FlashCardContent.TEXT, 
-                                back=f'images/{lemma}.png',
-                                back_type=FlashCardContent.IMAGE))
+                                back=lemma,
+                                back_type=FlashCardContent.TEXT))
+            
+            # set.append(FlashCard(front=word, 
+            #                     front_type=FlashCardContent.TEXT, 
+            #                     back=f'images/{lemma}.png',
+            #                     back_type=FlashCardContent.IMAGE))
         return set
             
 

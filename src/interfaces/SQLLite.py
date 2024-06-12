@@ -1,4 +1,13 @@
 import sqlite3
+import re
+
+
+def regexp(expr, item):
+    try:
+        reg = re.compile(expr)
+        return reg.search(item) is not None
+    except Exception as e:
+        print(e)
 
 class SQL_Database:
     def __init__(self,db_file):
@@ -6,6 +15,7 @@ class SQL_Database:
         self.db_path = db_file
         try:
             self.con = sqlite3.connect(self.db_path)
+            self.con.create_function("REGEXP", 2, regexp)
             self.cur = self.con.cursor()
         except Exception as e:
             print(e)

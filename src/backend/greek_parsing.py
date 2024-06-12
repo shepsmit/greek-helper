@@ -4,11 +4,13 @@ from bs4 import BeautifulSoup
 from models.database_models import InflectedWord
 from backend.database import DatabaseInterface
 from storage.sqllite_config import *
+import csv
 
 class GreekParser():
     def __init__(self):
         self.db = DatabaseInterface()
 
+        self.d = self.loadLemmaMap()
 
     def newLemma(self, lemma:str):
         print(f"new lemma: {lemma}")
