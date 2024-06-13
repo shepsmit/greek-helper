@@ -3,6 +3,21 @@ from collections import defaultdict
 from typing import List
 from enum import Enum
 
+class Gender(Enum):
+    MASC = 0,
+    FEM  = 1,
+    NEUT = 2
+
+class Case(Enum):
+    NOM = 0,
+    GEN = 1,
+    DAT = 2,
+    ACC = 3
+
+class Number(Enum):
+    SING = 0,
+    PLUR = 1
+
 class FlashCardContent(Enum):
     TEXT = 0
     IMAGE = 1

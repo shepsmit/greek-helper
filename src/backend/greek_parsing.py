@@ -6,6 +6,10 @@ from backend.database import DatabaseInterface
 from storage.sqllite_config import *
 import csv
 
+# Common Words
+article_list = ["ὃ","τοῦ","ὅς","τοῖς","τῆς","αἱ" ]
+pronoun_list = ["ἡμῶν"]
+eimi_list = ["ἦν"]
 class GreekParser():
     def __init__(self):
         self.db = DatabaseInterface()
@@ -55,16 +59,29 @@ class GreekParser():
             for entry in inflected_entries:
                 self.db.insert_inflected(entry)
 
-    def getLemmaFromInflected(self, inflected_word:str):
+    def getLemmaFromInflected(self, inflected_word:str)->str:
+        # Check for article
+        if (inflected_word.lower() in article_list):
+            return "ὃ"
+        elif (inflected_word.lower() in pronoun_list):
+            return "autos"
+        elif (inflected_word.lower() in eimi_list):
+            return "ειμί"
         # Find word in database
-        lemma = self.db.get_lemma_from_inflected(inflected_word)
+        lemma = self.db.get_lemma_from_inflected(inflected_word)['value']
         return lemma
 
     def loadLemmaMap(self)->dict:
-        with open('lemma_map.csv', mode='r', encoding='utf8') as infile:
+        with open('src/lemma_map.csv', mode='r', encoding='utf8') as infile:
             reader = csv.reader(infile)
             d = {}
             for row in reader:
                 # Greek Lemma,  ImagePath (missing extension)
                 d[row[0]] = row[1] 
         return d
+    
+    def parse_article(word:str):
+        i_word = InflectedWord(inflection=word, lemma="ὃ")
+        match word:
+            case "ὃ": return InflectedWord(inflection=word)
+        # article_list = [,"τοῦ","ὅς","τοῖς","τῆς","αἱ" ]

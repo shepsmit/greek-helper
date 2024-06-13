@@ -15,9 +15,10 @@ class DatabaseInterface():
             match ord(c):
                 case 940: new_c = chr(8049) # ά
                 case 972: new_c = chr(8057) # ό
+                case 39:  new_c = "" # '
             
             word_converted += new_c
-
+        
         return word_converted
 
     def get_lemma_from_inflected(self, inflected:str)->str:
@@ -26,14 +27,21 @@ class DatabaseInterface():
 
         try:
             db = SQL_Database(DB_PATH_NT)
-            print(inflected)
             inflected_converted = self.convert_to_db_chars(inflected)
 
             db_response = db.run_query_params("SELECT * FROM [inflected] WHERE inflection REGEXP ?",[f"{inflected_converted},?".encode("utf-8")])
             if(len(db_response)>0):
-                word = InflectedWord()
-                word.parseQuery(db_response[0])
-                response_dict['value'] = word.lemma
+                # Make a list of all the matches (substrings match so this could be a lot)
+                inflected_list = []
+                for r in db_response:
+                    word = InflectedWord()
+                    word.parseQuery(r)
+                    inflected_list.append(word)
+                # find the shortest inflection match and extract the lemma
+
+                min_inflected = min([x.inflection for x in inflected_list],key=len)
+                lemmas = [x.lemma for x in inflected_list if x.inflection == min_inflected]
+                response_dict['value'] = lemmas[0]
             else:
                 response_dict['value'] = False
 

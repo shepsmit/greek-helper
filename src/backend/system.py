@@ -23,30 +23,33 @@ class FlashCardSet():
         verse = self.chapter.verses[verse_num]
         for word in verse.words:
 
-            lemma = self.greek_parser.getLemmaFromInflected(word)['value']
+            lemma = self.greek_parser.getLemmaFromInflected(word)
 
-            set.append(FlashCard(front=word, 
-                                front_type=FlashCardContent.TEXT, 
-                                back=lemma,
-                                back_type=FlashCardContent.TEXT))
+            if os.path.exists(f'src/images/{lemma}.png'):
+                set.append(FlashCard(front=f'src/images/{lemma}.png', 
+                                    front_type=FlashCardContent.IMAGE, 
+                                    back=word,
+                                    back_type=FlashCardContent.TEXT))
+            else:
+                set.append(FlashCard(front=lemma, 
+                                    front_type=FlashCardContent.TEXT, 
+                                    back=word,
+                                    back_type=FlashCardContent.TEXT))
             
-            # set.append(FlashCard(front=word, 
-            #                     front_type=FlashCardContent.TEXT, 
-            #                     back=f'images/{lemma}.png',
-            #                     back_type=FlashCardContent.IMAGE))
+
         return set
             
 
     def loadFlashCardSetImages(self):
-        files = os.listdir("images")
+        files = os.listdir("src/images")
         for f in files:
             self.flashcards.append(FlashCard(back=f.replace(".png",""), 
                                              back_type=FlashCardContent.TEXT, 
-                                             front=f'images/{f}',
+                                             front=f'src.images/{f}',
                                              front_type=FlashCardContent.IMAGE))
             
     def loadGreekChapter(self, chapter_name:str)->Chapter:
-        file_path = f"text/{chapter_name.lower().replace(" ","")}.txt"
+        file_path = f"src/text/{chapter_name.lower().replace(" ","")}.txt"
         with open(file_path, encoding='utf8') as f:
             txt = f.read()
         
