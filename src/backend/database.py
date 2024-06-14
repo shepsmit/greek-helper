@@ -8,7 +8,6 @@ class DatabaseInterface():
         pass
 
     def convert_to_db_chars(self, word:str)->str:
-
         word_converted = ""
         for c in word:
             new_c = c
@@ -21,7 +20,7 @@ class DatabaseInterface():
         
         return word_converted
 
-    def get_lemma_from_inflected(self, inflected:str)->str:
+    def parse_inflected(self, inflected:str)->dict:
         response_dict = {'value': None,
                          'error': SQLliteStatus.SQLLITE_STATUS_OK}
 
@@ -38,10 +37,10 @@ class DatabaseInterface():
                     word.parseQuery(r)
                     inflected_list.append(word)
                 # find the shortest inflection match and extract the lemma
-
                 min_inflected = min([x.inflection for x in inflected_list],key=len)
-                lemmas = [x.lemma for x in inflected_list if x.inflection == min_inflected]
-                response_dict['value'] = lemmas[0]
+                inflected_entry = [x for x in inflected_list if x.inflection == min_inflected]
+
+                response_dict['value'] = inflected_entry[0]
             else:
                 response_dict['value'] = False
 

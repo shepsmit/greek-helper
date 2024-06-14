@@ -3,20 +3,53 @@ from collections import defaultdict
 from typing import List
 from enum import Enum
 
+class Number(Enum):
+    SINGULAR = 0, # Icon: One Person
+    PLURAL = 1    # Icon: Crowd
+
+class Mood(Enum):
+    INDICATIVE = 0,  # Default
+    IMPERATIVE = 1,  # Exclamation Point
+    SUBJUNCTIVE = 2, # Question?
+    OPTATIVE = 3,    # ?
+    PARTICIPLE = 4,  # ?
+    INFINITIVE = 5   # ?
+
+class Voice(Enum):
+    ACTIVE = 0,         # ?
+    MIDDLE_PASSIVE = 1, # ?
+
+class Person(Enum):
+    FIRST  = 0,  # Icon: Point at Me
+    SECOND = 1,  # Icon: Point at You
+    THIRD  = 2   # Icon: Point at Them
+
 class Gender(Enum):
-    MASC = 0,
-    FEM  = 1,
-    NEUT = 2
+    MASCULINE = 0, # Border Color
+    FEMININE  = 1, # Border Color
+    NEUTER = 2,    # Border Color
+    MASCULINE_FEMININE = 3, # ?
+    MASCULINE_NEUTER = 4,   # ?
 
 class Case(Enum):
-    NOM = 0,
-    GEN = 1,
-    DAT = 2,
-    ACC = 3
+    NOMINATIVE = 0, # ?
+    GENITIVE = 1,   # ?
+    DATIVE = 2,     # ?
+    ACCUSATIVE = 3, # ?
+    NOMINATIVE_ACCUSATIVE = 4 # ?
 
-class Number(Enum):
-    SING = 0,
-    PLUR = 1
+class Tense(Enum):
+    PRESENT = 0,
+    IMPERFECT = 1,
+    AORIST = 2,
+    FUTURE = 3,
+    PERFECT = 4,
+    PLUPERFECT = 5,
+    FIRST_AORIST = 6,
+    SECOND_AORIST = 7,
+
+
+
 
 class FlashCardContent(Enum):
     TEXT = 0
@@ -49,6 +82,13 @@ class FlashCard:
     front_type:FlashCardContent = None
     back: str = ""
     back_type:FlashCardContent = None
+    gender: Gender = None
+    case: Case = None
+    number: Number = None
+    tense: Tense = None
+    mood: Mood = None
+    voice: Voice = None
+    person: Person = None
 
 
 
