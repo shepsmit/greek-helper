@@ -125,7 +125,7 @@ class GreekParser():
         match word:
             case "ἡμῶν":
                 i_word.person = Person.FIRST
-                i_word.tense  = Case.GENITIVE
+                i_word.case  = Case.GENITIVE
                 i_word.number = Number.PLURAL
         return i_word
 

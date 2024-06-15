@@ -56,6 +56,16 @@ class ViewFlashCard():
         self.setupView()
     
     def load_parsed_icons(self, f:FlashCard):
+        if(f.case != None):
+            match f.case:
+                case Case.NOMINATIVE:
+                    ui.label("N")
+                case Case.GENITIVE:
+                    ui.label("G")
+                case Case.DATIVE:
+                    ui.label("D")
+                case Case.ACCUSATIVE:
+                    ui.label("A")
         if(f.tense != None):
             match f.tense:
                 case Tense.PRESENT:
@@ -102,16 +112,7 @@ class ViewFlashCard():
                     ui.label("2")
                 case Person.THIRD:
                     ui.label("3")
-        if(f.case != None):
-            match f.case:
-                case Case.NOMINATIVE:
-                    ui.label("N")
-                case Case.GENITIVE:
-                    ui.label("G")
-                case Case.DATIVE:
-                    ui.label("D")
-                case Case.ACCUSATIVE:
-                    ui.label("A")
+        
         if(f.gender != None):
             match f.gender:
                 case Gender.FEMININE:
