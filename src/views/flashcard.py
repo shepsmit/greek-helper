@@ -128,38 +128,38 @@ class ViewFlashCard():
                 case Number.SINGULAR:
                     ui.image("src/images/icons/number_singular.png").classes("w-6 h-6")
 
-    def load_flash_cards(self, f_cards:list):
-        for f in f_cards[:100]:
+
+    def reset_flashcard_view(self, verse_num:int):
+        self.flashcard_container.clear()
+        with ui.row() as self.flashcard_container:
+            self.load_flashcard_view(verse_num)
+
+    def load_flashcard_view(self, verse_num:int):
+        f_cards = self.fset.get_flashcard_set_verse_words(verse_num)
+        for f in f_cards:
             card_class_str = "items-center"
             with ui.card().classes(card_class_str):
                 FlashCardContainer(flashcard=f, class_str="w-24 h-24 text-center")
                 # Now put the parsing info below the image
                 with ui.row().classes("items-center"):
                     self.load_parsed_icons(f)
-    
-
-    def load_flashcard_view(self):
-        chapter_ref = "1 John 1"
-        fset = FlashCardSet(chapter_ref)
-        ui.label(chapter_ref)
-
-        # ui.number(label='Verse', value=1,
-        #   on_change=lambda e: self.update_flashcards(e.value))
-
-        f_cards = fset.get_flashcard_set_verse_words(verse_num=1)
-        self.load_flash_cards(f_cards)
-
-        
-                    
-
 
     def setupView(self):
         @ui.page('/')
         def page_index():
             with navbar('Session In Progress'):
                 ### Header ###
-                with ui.row().classes('w-full items-center') as content:
-                    self.load_flashcard_view()
+                with ui.row().classes('w-full items-center'):
+                    chapter_ref = "1 John 1"
+                    ui.label(chapter_ref).classes('text-3xl font-bold')
+                    self.fset = FlashCardSet(chapter_ref)
+                    num_verses = self.fset.chapter.num_verses()
+
+                    ui.number( value=1, min=1, max=num_verses,suffix=f" / {num_verses}",
+                        on_change=lambda e: self.reset_flashcard_view(verse_num=e.value)).classes('text-3xl font-bold w-32').props('dense')
+
+                    with ui.row() as self.flashcard_container:
+                        self.reset_flashcard_view(verse_num=1)
 
                 
                             

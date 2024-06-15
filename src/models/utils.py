@@ -3,6 +3,20 @@ from collections import defaultdict
 from typing import List
 from enum import Enum
 
+# Nouns have
+# Case
+# Gender
+# Number  
+# Lemma
+
+# Verbs have
+# Tense
+# Voice
+# Mood
+# Person
+# Number
+# Lemma  
+
 class Number(Enum):
     SINGULAR = 0, # Icon: One Person
     PLURAL = 1    # Icon: Crowd
@@ -68,6 +82,8 @@ class Chapter:
         print(self.reference)
         for k in self.verses.keys():
             print(f'{k}: {self.verses[k].text}')
+    def num_verses(self)->int:
+        return len(self.verses.keys())
 
 
 

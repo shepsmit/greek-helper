@@ -42,7 +42,7 @@ class DatabaseInterface():
 
                 response_dict['value'] = inflected_entry[0]
             else:
-                response_dict['value'] = False
+                response_dict['value'] = InflectedWord(inflection=inflected, lemma="NOT FOUND")
 
         except Exception as e:
             print(e)
