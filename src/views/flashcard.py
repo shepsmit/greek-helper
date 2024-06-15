@@ -66,10 +66,12 @@ class ViewFlashCard():
                     ui.label("D")
                 case Case.ACCUSATIVE:
                     ui.label("A")
+                case Case.NOMINATIVE_ACCUSATIVE:
+                    ui.label("N|A")
         if(f.tense != None):
             match f.tense:
                 case Tense.PRESENT:
-                    ui.image("src/images/icons/tense_present.png").classes("w-6 h-6")
+                    ui.image("src/images/icons/tense_present.png").classes("w-6 h-10")
                 case Tense.IMPERFECT:
                     ui.image("src/images/icons/tense_imperfect.png").classes("w-6 h-6")
                 case Tense.FUTURE:
@@ -154,12 +156,13 @@ class ViewFlashCard():
                     ui.label(chapter_ref).classes('text-3xl font-bold')
                     self.fset = FlashCardSet(chapter_ref)
                     num_verses = self.fset.chapter.num_verses()
+                    start_verse = 5
 
-                    ui.number( value=1, min=1, max=num_verses,suffix=f" / {num_verses}",
+                    ui.number( value=start_verse, min=1, max=num_verses,suffix=f" / {num_verses}",
                         on_change=lambda e: self.reset_flashcard_view(verse_num=e.value)).classes('text-3xl font-bold w-32').props('dense')
 
                     with ui.row() as self.flashcard_container:
-                        self.reset_flashcard_view(verse_num=1)
+                        self.reset_flashcard_view(verse_num=start_verse)
 
                 
                             

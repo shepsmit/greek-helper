@@ -9,9 +9,12 @@ from models.utils import *
 
 # Common Words
 article_list = ["ὁ","τοῦ","τοῖς","τῆς","αἱ" ]
-pronoun_list = ["ἡμῶν"]
+pronoun_1_2_list = ["ἡμεῖς","ἡμῶν", "ἡμῖν", "ὑμῖν","ὑμεῖς"]
+pronoun_3_list = ["αὐτός", "αὐτοῦ","αὐτῷ"]
 relative_pronoun_list = ["ὃ","ὅς"]
-eimi_list = ["ἦν"]
+
+pronoun_list = pronoun_1_2_list + pronoun_3_list + relative_pronoun_list
+eimi_list = ["ἦν","ἔστιν","ἐστιν"]
 class GreekParser():
     def __init__(self):
         self.db = DatabaseInterface()
@@ -67,8 +70,6 @@ class GreekParser():
             return self.parse_article(inflected_word.lower())
         elif (inflected_word.lower() in pronoun_list):
             return self.parse_pronoun(inflected_word.lower())
-        elif (inflected_word.lower() in relative_pronoun_list):
-            return self.parse_relative_pronoun(inflected_word.lower())
         elif (inflected_word.lower() in eimi_list):
             return self.parse_eimi(inflected_word.lower())
         # Find word in database
@@ -117,16 +118,76 @@ class GreekParser():
                 i_word.person = Person.THIRD
                 i_word.number = Number.SINGULAR
                 i_word.tense  = Tense.IMPERFECT
+                i_word.mood   = Mood.INDICATIVE
+                i_word.voice  = Voice.ACTIVE
+
+            case "ἔστιν":
+                i_word.person = Person.THIRD
                 i_word.number = Number.SINGULAR
+                i_word.tense  = Tense.PRESENT
+                i_word.mood   = Mood.INDICATIVE
+                i_word.voice  = Voice.ACTIVE
+            case "ἐστιν":
+                i_word.person = Person.THIRD
+                i_word.number = Number.SINGULAR
+                i_word.tense  = Tense.PRESENT
+                i_word.mood   = Mood.INDICATIVE
+                i_word.voice  = Voice.ACTIVE
+
+                
         return i_word
     
     def parse_pronoun(self, word:str)->InflectedWord:
+        if(word in pronoun_1_2_list):
+            return self.parse_pronoun_1_2(word)
+        if(word in pronoun_3_list):
+            return self.parse_pronoun_3(word)
+        if(word in relative_pronoun_list):
+            return self.parse_relative_pronoun(word)
+
+    def parse_pronoun_1_2(self, word:str)->InflectedWord:
         i_word = InflectedWord(inflection=word, lemma="ἐγώ")
         match word:
+            case "ἡμεῖς":
+                i_word.person = Person.FIRST
+                i_word.case  = Case.NOMINATIVE
+                i_word.number = Number.PLURAL
             case "ἡμῶν":
                 i_word.person = Person.FIRST
                 i_word.case  = Case.GENITIVE
                 i_word.number = Number.PLURAL
+            case "ἡμῖν":
+                i_word.person = Person.FIRST
+                i_word.case  = Case.DATIVE
+                i_word.number = Number.PLURAL
+            case "ὑμεῖς":
+                i_word.person = Person.SECOND
+                i_word.case  = Case.NOMINATIVE
+                i_word.number = Number.PLURAL
+            case "ὑμῖν":
+                i_word.person = Person.SECOND
+                i_word.case  = Case.DATIVE
+                i_word.number = Number.PLURAL
+        return i_word
+
+    def parse_pronoun_3(self, word:str)->InflectedWord:
+        i_word = InflectedWord(inflection=word, lemma="ἐγώ")
+        i_word.person = Person.THIRD
+        match word:
+            case "αὐτός":
+                i_word.gender = Gender.MASCULINE
+                i_word.case  = Case.NOMINATIVE
+                i_word.number = Number.SINGULAR
+            case "αὐτοῦ":
+                i_word.gender = Gender.MASCULINE
+                i_word.case  = Case.GENITIVE
+                i_word.number = Number.SINGULAR
+            case "αὐτῷ":
+                i_word.gender = Gender.NEUTER
+                i_word.case  = Case.DATIVE
+                i_word.number = Number.SINGULAR
+
+                
         return i_word
 
 

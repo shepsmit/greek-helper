@@ -32,6 +32,8 @@ class InflectedWord:
         self.lemma              = str(query[2].decode("utf-8"))
         if ("or" in self.lemma):
             self.lemma = self.lemma.split(" ")[0]
+        if ("," in self.lemma):
+            self.lemma = self.lemma.split(",")[0]
         self.uncontracted_form  = str(query[3].decode("utf-8"))
         self.parsing            = str(query[4])
         self.unpack_parsing()

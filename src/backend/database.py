@@ -14,6 +14,9 @@ class DatabaseInterface():
             match ord(c):
                 case 940: new_c = chr(8049) # ά
                 case 972: new_c = chr(8057) # ό
+                case 974: new_c = chr(8061) # ώ
+                case 941: new_c = chr(8051) # έ
+                case 943: new_c = chr(8055) # ί
                 case 39:  new_c = "" # '
             
             word_converted += new_c
