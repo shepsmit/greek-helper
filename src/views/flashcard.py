@@ -19,22 +19,7 @@ def getFlashCardElement(flashcard: FlashCard, side:FlashCardSide, class_str):
         elif(flashcard.back_type == FlashCardContent.TEXT):
             return (ui.label(flashcard.back).classes(class_str))
 
-def getFlashCardParsing(flashcard: FlashCard):
-    with ui.row():
-        if flashcard.number != None:
-            match flashcard.number:
-                case Number.SINGULAR:
-                    ui.icon('person')
-                case Number.PLURAL:
-                    ui.icon('groups')
-        if flashcard.person != None:
-            match flashcard.person:
-                case Person.FIRST:
-                    ui.label('1')
-                case Person.SECOND:
-                    ui.label('2')
-                case Person.THIRD:
-                    ui.label('3')
+
 
 class FlashCardContainer(ui.card):
     def __init__(self, flashcard: FlashCard, class_str, *args, **kwargs) -> None:
@@ -138,9 +123,9 @@ class ViewFlashCard():
         if(f.number != None):
             match f.number:
                 case Number.PLURAL:
-                    ui.image("src/images/icons/number_singular.png").classes("w-6 h-6")
-                case Number.SINGULAR:
                     ui.image("src/images/icons/number_plural.png").classes("w-8 h-6")
+                case Number.SINGULAR:
+                    ui.image("src/images/icons/number_singular.png").classes("w-6 h-6")
 
     def load_flash_cards(self, f_cards:list):
         for f in f_cards[:100]:

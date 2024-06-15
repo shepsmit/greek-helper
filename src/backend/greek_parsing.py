@@ -8,8 +8,9 @@ import csv
 from models.utils import *
 
 # Common Words
-article_list = ["ὃ","ὃ","τοῦ","ὅς","τοῖς","τῆς","αἱ" ]
+article_list = ["ὁ","τοῦ","τοῖς","τῆς","αἱ" ]
 pronoun_list = ["ἡμῶν"]
+relative_pronoun_list = ["ὃ","ὅς"]
 eimi_list = ["ἦν"]
 class GreekParser():
     def __init__(self):
@@ -60,24 +61,14 @@ class GreekParser():
             for entry in inflected_entries:
                 self.db.insert_inflected(entry)
 
-    def get_lemma_from_inflected(self, inflected_word:str)->str:
-        # Check for article
-        if (inflected_word.lower() in article_list):
-            return "ὃ"
-        elif (inflected_word.lower() in pronoun_list):
-            return "autos"
-        elif (inflected_word.lower() in eimi_list):
-            return "ειμί"
-        # Find word in database
-        word = self.db.parse_inflected(inflected_word)['value']
-        return word.lemma
-    
     def get_parsed_inflected(self, inflected_word:str)->InflectedWord:
         # Check for article
         if (inflected_word.lower() in article_list):
             return self.parse_article(inflected_word.lower())
         elif (inflected_word.lower() in pronoun_list):
             return self.parse_pronoun(inflected_word.lower())
+        elif (inflected_word.lower() in relative_pronoun_list):
+            return self.parse_relative_pronoun(inflected_word.lower())
         elif (inflected_word.lower() in eimi_list):
             return self.parse_eimi(inflected_word.lower())
         # Find word in database
@@ -94,11 +85,10 @@ class GreekParser():
         return d
     
     def parse_article(self, word:str)->InflectedWord:
-        i_word = InflectedWord(inflection=word, lemma="ὃ")
-        if(word == "ὃ"):
-            word = "ὃ"
+        i_word = InflectedWord(inflection=word, lemma="ὁ")
+
         match word:
-            case "ὃ":
+            case "ὁ":
                 i_word.gender = Gender.MASCULINE
                 i_word.case   = Case.NOMINATIVE
                 i_word.number = Number.SINGULAR
@@ -135,7 +125,20 @@ class GreekParser():
         match word:
             case "ἡμῶν":
                 i_word.person = Person.FIRST
-                i_word.number = Number.SINGULAR
                 i_word.tense  = Case.GENITIVE
                 i_word.number = Number.PLURAL
+        return i_word
+
+
+    def parse_relative_pronoun(self, word:str)->InflectedWord:
+        i_word = InflectedWord(inflection=word, lemma="ὅς")
+        match word:
+            case "ὅς":
+                i_word.gender = Gender.MASCULINE
+                i_word.case   = Case.NOMINATIVE
+                i_word.number = Number.SINGULAR
+            case "ὃ":
+                i_word.gender = Gender.NEUTER
+                i_word.case   = Case.NOMINATIVE
+                i_word.number = Number.SINGULAR
         return i_word
