@@ -156,7 +156,7 @@ class ViewFlashCard():
                     ui.label(chapter_ref).classes('text-3xl font-bold')
                     self.fset = FlashCardSet(chapter_ref)
                     num_verses = self.fset.chapter.num_verses()
-                    start_verse = 5
+                    start_verse = 9
 
                     ui.number( value=start_verse, min=1, max=num_verses,suffix=f" / {num_verses}",
                         on_change=lambda e: self.reset_flashcard_view(verse_num=e.value)).classes('text-3xl font-bold w-32').props('dense')

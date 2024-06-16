@@ -9,8 +9,8 @@ from models.utils import *
 
 # Common Words
 article_list = ["ὁ","τοῦ","τοῖς","τῆς","αἱ" ]
-pronoun_1_2_list = ["ἡμεῖς","ἡμῶν", "ἡμῖν", "ὑμῖν","ὑμεῖς"]
-pronoun_3_list = ["αὐτός", "αὐτοῦ","αὐτῷ"]
+pronoun_1_2_list = ["ἡμᾶς","ἡμεῖς","ἡμῶν", "ἡμῖν", "ὑμῖν","ὑμεῖς"]
+pronoun_3_list = ["αὐτός","αὐτός", "αὐτοῦ","αὐτῷ",]
 relative_pronoun_list = ["ὃ","ὅς"]
 
 pronoun_list = pronoun_1_2_list + pronoun_3_list + relative_pronoun_list
@@ -160,6 +160,10 @@ class GreekParser():
                 i_word.person = Person.FIRST
                 i_word.case  = Case.DATIVE
                 i_word.number = Number.PLURAL
+            case "ἡμᾶς":
+                i_word.person = Person.FIRST
+                i_word.case  = Case.ACCUSATIVE
+                i_word.number = Number.PLURAL
             case "ὑμεῖς":
                 i_word.person = Person.SECOND
                 i_word.case  = Case.NOMINATIVE
@@ -178,6 +182,12 @@ class GreekParser():
                 i_word.gender = Gender.MASCULINE
                 i_word.case  = Case.NOMINATIVE
                 i_word.number = Number.SINGULAR
+            case "αὐτός":
+                i_word.gender = Gender.MASCULINE
+                i_word.case  = Case.NOMINATIVE
+                i_word.number = Number.SINGULAR
+
+                
             case "αὐτοῦ":
                 i_word.gender = Gender.MASCULINE
                 i_word.case  = Case.GENITIVE
