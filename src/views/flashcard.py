@@ -54,6 +54,13 @@ class FlashCardContainer(ui.card):
 class ViewFlashCard():
     def __init__(self):
         self.setupView()
+
+        self.chapter_name = "1 John"
+        self.chapter_num = 1
+        self.verse_num = 1
+        self.num_chapters = 5
+        self.num_verses = 10
+        
     
     def load_parsed_icons(self, f:FlashCard):
         if(f.case != None):
@@ -131,10 +138,19 @@ class ViewFlashCard():
                     ui.image("src/images/icons/number_singular.png").classes("w-6 h-6")
 
 
-    def reset_flashcard_view(self, verse_num:int):
-        self.flashcard_container.clear()
-        with ui.row() as self.flashcard_container:
-            self.load_flashcard_view(verse_num)
+    def reset_flashcard_view(self, chapter_num:int, verse_num:int):
+
+        if(chapter_num <= self.num_chapters):
+            temp_fset = FlashCardSet(f'{self.chapter_name} {int(self.chapter_num)}')
+            if(verse_num <= self.fset.chapter.num_verses()):
+                self.verse_num = verse_num
+                self.chapter_num = chapter_num
+                self.fset = temp_fset
+                self.num_verses = self.fset.chapter.num_verses()
+                self.flashcard_container.clear()
+
+                with ui.row() as self.flashcard_container:
+                    self.load_flashcard_view(verse_num)
 
     def load_flashcard_view(self, verse_num:int):
         f_cards = self.fset.get_flashcard_set_verse_words(verse_num)
@@ -152,17 +168,17 @@ class ViewFlashCard():
             with navbar('Session In Progress'):
                 ### Header ###
                 with ui.row().classes('w-full items-center'):
-                    chapter_ref = "1 John 1"
-                    ui.label(chapter_ref).classes('text-3xl font-bold')
-                    self.fset = FlashCardSet(chapter_ref)
-                    num_verses = self.fset.chapter.num_verses()
-                    start_verse = 9
+                    ui.label(self.chapter_name).classes('text-3xl font-bold')
+                    self.fset = FlashCardSet(f'{self.chapter_name} {int(self.chapter_num)}')
 
-                    ui.number( value=start_verse, min=1, max=num_verses,suffix=f" / {num_verses}",
-                        on_change=lambda e: self.reset_flashcard_view(verse_num=e.value)).classes('text-3xl font-bold w-32').props('dense')
+                    ui.number( value=1, min=1,
+                        on_change=lambda e: self.reset_flashcard_view(chapter_num=e.value, verse_num=1)).classes('text-3xl font-bold w-12').props('dense')
+
+                    ui.number( value=1, min=1,
+                        on_change=lambda e: self.reset_flashcard_view(chapter_num=self.chapter_num, verse_num=e.value)).classes('text-3xl font-bold w-12').props('dense').bind_value(self,'verse_num')
 
                     with ui.row() as self.flashcard_container:
-                        self.reset_flashcard_view(verse_num=start_verse)
+                        self.reset_flashcard_view(chapter_num=1,verse_num=1)
 
                 
                             
