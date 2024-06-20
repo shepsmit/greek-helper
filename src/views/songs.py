@@ -15,7 +15,7 @@ class ViewSongs():
                     with ui.card():
                         ui.label("Intro")
                         ui.link("Alphabet","https://www.youtube.com/watch?v=UEyns65Zf8s&list=PLO-USksx-puxxltOhjEK-tSEjbEX1XepZ&index=1",new_tab=True)
-                        ui.link("Article","https://www.youtube.com/watch?v=UEyns65Zf8s&list=PLO-USksx-puxxltOhjEK-tSEjbEX1XepZ&index=5",new_tab=True)
+                        ui.link("Article","https://youtu.be/h_1V8BL5MUg?list=PLO-USksx-puxxltOhjEK-tSEjbEX1XepZ&t=18",new_tab=True)
                     
                     with ui.card():
                         ui.label("Nouns")

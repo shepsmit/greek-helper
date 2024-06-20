@@ -21,6 +21,12 @@ class GreekParser():
 
         self.d = self.load_lemma_map()
 
+        # entry = InflectedWord(inflection="οὐ, οὐκ, οὐχ", lemma="οὐ", parsing="indecl", translation="not")
+        # self.new_lemma_manual(entry)
+
+    def new_lemma_manual(self, entry: InflectedWord):
+        self.db.insert_inflected(entry)
+
     def new_lemma(self, lemma:str):
         # print(f"new lemma: {lemma}")
         # check to see if this lemma is already in the database
