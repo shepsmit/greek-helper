@@ -75,11 +75,12 @@ class FlashCardSide(Enum):
 
 @dataclass
 class Chapter:
-    reference: str = ""
+    book_name: str = ""
+    chapter_num: int = None
     verses: defaultdict[dict] = field(default_factory=lambda: defaultdict(dict))
 
     def printChapter(self)->None:
-        print(self.reference)
+        print(f'{self.book_name} {self.chapter_num}')
         for k in self.verses.keys():
             print(f'{k}: {self.verses[k].text}')
     def num_verses(self)->int:

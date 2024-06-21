@@ -5,11 +5,37 @@ import os
 import re
 
 class FlashCardSet():
-    def __init__(self, chapter_name):
+    def __init__(self):
         self.greek_parser = GreekParser()
         self.flashcards = []
-        self.chapter = self.load_greek_chapter(chapter_name)
         # self.chapter.printChapter()
+
+        self.book_name = "1 John"
+        self.chapter_num = 1
+        self.chapter = self.load_greek_chapter(self.book_name, self.chapter_num)
+
+        self.verse_num = 1
+        self.num_chapters = 5
+        self.flashcards = None
+
+        self.load_flashcard_set()
+
+
+    def load_flashcard_set(self):
+        self.flashcards = self.get_flashcard_set_verse_words(self.verse_num)
+
+    def update_verse(self, number:int):
+        if(number > 0 and number <= self.chapter.num_verses()):
+            self.verse_num = number
+            self.load_flashcard_set()
+
+
+    def update_chapter(self, number:int):
+        if(number > 0 and number <= self.num_chapters):
+            self.chapter_num = int(number)
+            self.chapter = self.load_greek_chapter(self.book_name, self.chapter_num)
+            self.verse_num = 1
+            self.load_flashcard_set()
 
 
     def get_flashcard_set_chapter_words(self)-> list:
@@ -59,12 +85,12 @@ class FlashCardSet():
                                              front=f'src.images/{f}',
                                              front_type=FlashCardContent.IMAGE))
             
-    def load_greek_chapter(self, chapter_name:str)->Chapter:
-        file_path = f"src/text/{chapter_name.lower().replace(" ","")}.txt"
+    def load_greek_chapter(self, book_name:str, chapter_num:int)->Chapter:
+        file_path = f"src/text/{book_name.lower().replace(" ","")}{str(chapter_num)}.txt"
         with open(file_path, encoding='utf8') as f:
             txt = f.read()
         
-        c = Chapter(reference=chapter_name)
+        c = Chapter(book_name, chapter_num)
         
         verses_text  = re.findall(r"\d+(\D+)", txt) # split by verse number
         for i, v_text in enumerate(verses_text):

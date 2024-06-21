@@ -1,6 +1,5 @@
 
 from nicegui import ui
-from backend.system import FlashCardSet
 from models.utils import FlashCard, FlashCardSide, FlashCardContent
 from views.components.navbar import navbar
 from models.utils import *
@@ -52,14 +51,11 @@ class FlashCardContainer(ui.card):
         super().update()
 
 class ViewFlashCard():
-    def __init__(self):
+    def __init__(self, system):
         self.setupView()
 
-        self.chapter_name = "1 John"
-        self.chapter_num = 1
-        self.verse_num = 1
-        self.num_chapters = 5
-        self.num_verses = 10
+        self.system = system
+
         
     
     def load_parsed_icons(self, f:FlashCard):
@@ -138,29 +134,16 @@ class ViewFlashCard():
                     ui.image("src/images/icons/number_singular.png").classes("w-6 h-6")
 
 
-    def reset_flashcard_view(self, chapter_num:int, verse_num:int):
-
-        if(chapter_num <= self.num_chapters):
-            temp_fset = FlashCardSet(f'{self.chapter_name} {int(self.chapter_num)}')
-            if(verse_num <= self.fset.chapter.num_verses()):
-                self.verse_num = verse_num
-                self.chapter_num = chapter_num
-                self.fset = temp_fset
-                self.num_verses = self.fset.chapter.num_verses()
-                self.flashcard_container.clear()
-
-                with ui.row() as self.flashcard_container:
-                    self.load_flashcard_view(verse_num)
-
-    def load_flashcard_view(self, verse_num:int):
-        f_cards = self.fset.get_flashcard_set_verse_words(verse_num)
-        for f in f_cards:
-            card_class_str = "items-center"
-            with ui.card().classes(card_class_str):
-                FlashCardContainer(flashcard=f, class_str="w-24 h-24 text-center")
-                # Now put the parsing info below the image
-                with ui.row().classes("items-center"):
-                    self.load_parsed_icons(f)
+    def reset_flashcard_view(self):
+        self.flashcard_container.clear()
+        with ui.row() as self.flashcard_container:
+            for f in self.system.flashcards:
+                card_class_str = "items-center"
+                with ui.card().classes(card_class_str):
+                    FlashCardContainer(flashcard=f, class_str="w-24 h-24 text-center")
+                    # Now put the parsing info below the image
+                    with ui.row().classes("items-center"):
+                        self.load_parsed_icons(f)
 
     def setupView(self):
         @ui.page('/')
@@ -168,17 +151,17 @@ class ViewFlashCard():
             with navbar('Session In Progress'):
                 ### Header ###
                 with ui.row().classes('w-full items-center'):
-                    ui.label(self.chapter_name).classes('text-3xl font-bold')
-                    self.fset = FlashCardSet(f'{self.chapter_name} {int(self.chapter_num)}')
-
+                    ui.label().classes('text-3xl font-bold').bind_text(self.system, "book_name")
+                    
                     ui.number( value=1, min=1,
-                        on_change=lambda e: self.reset_flashcard_view(chapter_num=e.value, verse_num=1)).classes('text-3xl font-bold w-12').props('dense')
-
+                        on_change=lambda e: self.system.update_chapter(e.value)).bind_value_from(self.system, "chapter_num").classes('text-3xl font-bold w-12').props('dense')
+                    ui.label(":").classes('text-3xl font-bold')
                     ui.number( value=1, min=1,
-                        on_change=lambda e: self.reset_flashcard_view(chapter_num=self.chapter_num, verse_num=e.value)).classes('text-3xl font-bold w-12').props('dense').bind_value(self,'verse_num')
+                        on_change=lambda e: self.system.update_verse(e.value)).bind_value_from(self.system, "verse_num").classes('text-3xl font-bold w-12').props('dense')
+                    ui.button("Refresh",on_click=lambda e: self.reset_flashcard_view())
 
                     with ui.row() as self.flashcard_container:
-                        self.reset_flashcard_view(chapter_num=1,verse_num=1)
+                        self.reset_flashcard_view()
 
                 
                             
