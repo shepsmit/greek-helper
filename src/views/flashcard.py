@@ -52,9 +52,14 @@ class FlashCardContainer(ui.card):
 
 class ViewFlashCard():
     def __init__(self, system):
+        self.flashcard_container = None
+        self.system = system
+
+        self.update_flag_verse = False
+        self.update_flag_chapter = False
+
         self.setupView()
 
-        self.system = system
 
         
     
@@ -133,6 +138,47 @@ class ViewFlashCard():
                 case Number.SINGULAR:
                     ui.image("src/images/icons/number_singular.png").classes("w-6 h-6")
 
+    # Handler for Verse Select Element
+    def select_verse(self, verse_num):
+        if(self.flashcard_container != None):
+            if( self.update_flag_verse == False):
+                self.system.update_verse(verse_num)
+                self.reset_flashcard_view()
+            else:
+                self.update_flag_verse = False
+    
+    # Handler for Chapter Select Element
+    def select_chapter(self, chapter_num):
+        if(self.flashcard_container != None):
+            if( self.update_flag_chapter == False):
+                self.system.update_chapter(chapter_num)
+                self.reset_flashcard_view()
+            else:
+                self.update_flag_chapter = False
+    
+    # Handler for Next Verse Button Element
+    def next_verse(self):
+        if(self.flashcard_container != None):
+            self.system.next_verse()
+
+            self.update_flag_chapter = True # avoid double updates
+            self.update_flag_verse = True # avoid double updates
+            self.chapter_select.value = self.system.chapter_num
+            self.verse_select.value = self.system.verse_num
+
+            self.reset_flashcard_view()
+    
+    # Handler for Previous Verse Button Element
+    def previous_verse(self):
+        if(self.flashcard_container != None):
+            self.system.previous_verse()
+
+            self.update_flag_chapter = True # avoid double updates
+            self.update_flag_verse = True # avoid double updates
+            self.chapter_select.value = self.system.chapter_num
+            self.verse_select.value = self.system.verse_num
+
+            self.reset_flashcard_view()
 
     def reset_flashcard_view(self):
         self.flashcard_container.clear()
@@ -153,14 +199,19 @@ class ViewFlashCard():
                 with ui.row().classes('w-full items-center'):
                     ui.label().classes('text-3xl font-bold').bind_text(self.system, "book_name")
                     
-                    ui.number( value=1, min=1,
-                        on_change=lambda e: self.system.update_chapter(e.value)).bind_value_from(self.system, "chapter_num").classes('text-3xl font-bold w-12').props('dense')
+                    # ui.number( value=self.system.chapter_num, min=1,
+                    #     )
+                    # Chapter Number Select
+                    self.chapter_select = ui.select(list(range(1,self.system.num_chapters+1)), value=self.system.chapter_num, on_change=lambda e: self.select_chapter(e.value)).classes('text-3xl font-bold w-12').props('dense')
                     ui.label(":").classes('text-3xl font-bold')
-                    ui.number( value=1, min=1,
-                        on_change=lambda e: self.system.update_verse(e.value)).bind_value_from(self.system, "verse_num").classes('text-3xl font-bold w-12').props('dense')
-                    ui.button("Refresh",on_click=lambda e: self.reset_flashcard_view())
+                    # Verse Number Select
+                    self.verse_select = ui.select(list(range(1,self.system.num_verses+1)), value=self.system.verse_num, on_change=lambda e: self.select_verse(e.value)).classes('text-3xl font-bold w-12').props('dense')
+                    ui.button(icon="arrow_back_ios", on_click=lambda: self.previous_verse()).props('dense')
+                    ui.button(icon="arrow_forward_ios", on_click=lambda: self.next_verse()).props('dense')
 
-                    with ui.row() as self.flashcard_container:
+
+                    with ui.row() as fc:
+                        self.flashcard_container = fc
                         self.reset_flashcard_view()
 
                 

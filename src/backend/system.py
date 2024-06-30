@@ -11,11 +11,12 @@ class FlashCardSet():
         # self.chapter.printChapter()
 
         self.book_name = "1 John"
-        self.chapter_num = 1
+        self.chapter_num = 2
         self.chapter = self.load_greek_chapter(self.book_name, self.chapter_num)
 
         self.verse_num = 1
         self.num_chapters = 5
+        self.num_verses = self.chapter.num_verses()
         self.flashcards = None
 
         self.load_flashcard_set()
@@ -35,8 +36,27 @@ class FlashCardSet():
             self.chapter_num = int(number)
             self.chapter = self.load_greek_chapter(self.book_name, self.chapter_num)
             self.verse_num = 1
+            self.num_verses = self.chapter.num_verses()
             self.load_flashcard_set()
 
+    def next_verse(self):
+        # Go to the next verse
+        if(self.verse_num < self.num_verses):
+            self.update_verse(self.verse_num + 1)
+        else:
+            # Go to the next chapter
+            if(self.chapter_num < self.num_chapters):
+                self.update_chapter(self.chapter_num + 1)
+        
+    def previous_verse(self):
+        # Go back one verse
+        if(self.verse_num > 1):
+            self.update_verse(self.verse_num - 1)
+        # Go to the last verse of the previous chapter
+        else:
+            if(self.chapter_num > 1):
+                self.update_chapter(self.chapter_num - 1)
+                self.update_verse(self.num_verses)
 
     def get_flashcard_set_chapter_words(self)-> list:
         set = []
@@ -55,6 +75,7 @@ class FlashCardSet():
             if os.path.exists(f'src/images/{parsed_word.lemma}.png'):
                 fc.front=f'src/images/{parsed_word.lemma}.png' 
                 fc.front_type=FlashCardContent.IMAGE
+                # print(f'\tsrc/images/{parsed_word.lemma}.png')
 
             else:
                 fc.front=parsed_word.lemma 

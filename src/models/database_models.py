@@ -103,7 +103,7 @@ class InflectedWord:
         # Voice
         if "act" in self.parsing:
             self.voice = Voice.ACTIVE
-        elif "mp" in self.parsing:
+        elif "mp" in self.parsing or "θη" in self.parsing:
             self.voice = Voice.MIDDLE_PASSIVE
         # Person
         if "1st" in self.parsing:

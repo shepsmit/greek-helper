@@ -7,6 +7,7 @@ class DatabaseInterface():
     def __init__(self) -> None:
         pass
 
+
     def convert_to_db_chars(self, word:str)->str:
         word_converted = ""
         for c in word:
@@ -17,10 +18,11 @@ class DatabaseInterface():
                 case 942: new_c = chr(8053) # ή
                 case 943: new_c = chr(8055) # ί
                 case 972: new_c = chr(8057) # ό
+                case 973: new_c = chr(8059) # ύ
                 case 974: new_c = chr(8061) # ώ
                 case 39:  new_c = "" # '
                 case 183: new_c = "" # ·
-
+                case 59:  new_c = "" # ;
             
             word_converted += new_c
         
@@ -47,6 +49,8 @@ class DatabaseInterface():
                 inflected_entry = [x for x in inflected_list if x.inflection == min_inflected]
 
                 response_dict['value'] = inflected_entry[0]
+            elif inflected[0] in ["Ἰ"]: # Likely a proper noun
+                response_dict['value'] = InflectedWord(inflection=inflected, lemma=inflected)
             else:
                 response_dict['value'] = InflectedWord(inflection=inflected, lemma="NOT FOUND")
 
@@ -79,6 +83,9 @@ class DatabaseInterface():
     def insert_inflected(self, inflected_word:InflectedWord):
         try:
             print(f"Insert {inflected_word.inflection} ")
+            # Convert to the greek character scheme of the database
+            inflected_converted = self.convert_to_db_chars(inflected_word.inflection)
+            inflected_word.inflection = inflected_converted
             db = SQL_Database(DB_PATH_NT)
             db.insert_table(greek_inflected_table_insert_info,inflected_word.getInsertParams())
             db.close()

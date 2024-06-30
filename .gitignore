@@ -5,3 +5,4 @@ src/models/__pycache__
 src/backend/__pycache__
 src/storage/__pycache__
 src/interfaces/__pycache__
+src/lemma_map.csv

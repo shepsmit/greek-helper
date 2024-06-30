@@ -12,6 +12,7 @@ class ViewReference():
             with navbar('Reference'):
                 ### Header ###
                 with ui.row().classes('w-full items-center'):
+                    ui.image("src/images/ref/article.png").classes("w-1/3")
                     ui.image("src/images/ref/pronouns_1_2.png").classes("w-1/4")
                     ui.image("src/images/ref/pronouns_3.png").classes("w-1/4")
                     ui.image("src/images/ref/relative_pronoun.png").classes("w-1/4")
