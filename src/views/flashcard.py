@@ -138,6 +138,18 @@ class ViewFlashCard():
                 case Number.SINGULAR:
                     ui.image("src/images/icons/number_singular.png").classes("w-6 h-6")
 
+    # Handler for Book Select Element
+    def select_book(self, book_index):
+        if(self.flashcard_container != None):
+            self.system.update_book(book_index)
+
+            self.update_flag_chapter = True # avoid double updates
+            self.update_flag_verse = True # avoid double updates
+            self.chapter_select.value = self.system.chapter_num
+            self.verse_select.value = self.system.verse_num
+
+            self.reset_flashcard_view()
+
     # Handler for Verse Select Element
     def select_verse(self, verse_num):
         if(self.flashcard_container != None):
@@ -197,10 +209,8 @@ class ViewFlashCard():
             with navbar('Session In Progress'):
                 ### Header ###
                 with ui.row().classes('w-full items-center'):
-                    ui.label().classes('text-3xl font-bold').bind_text(self.system, "book_name")
-                    
-                    # ui.number( value=self.system.chapter_num, min=1,
-                    #     )
+                    # Book Name Select
+                    self.book_select = ui.select(self.system.book_dict, value=self.system.book_index, on_change=lambda e: self.select_book(e.value)).classes('text-3xl font-bold w-36').props('dense')
                     # Chapter Number Select
                     self.chapter_select = ui.select(list(range(1,self.system.num_chapters+1)), value=self.system.chapter_num, on_change=lambda e: self.select_chapter(e.value)).classes('text-3xl font-bold w-12').props('dense')
                     ui.label(":").classes('text-3xl font-bold')

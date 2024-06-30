@@ -10,9 +10,11 @@ class FlashCardSet():
         self.flashcards = []
         # self.chapter.printChapter()
 
-        self.book_name = "1 John"
+        self.book_dict = {1:"1 John",
+                          2:"2 John"}
+        self.book_index = 1
         self.chapter_num = 2
-        self.chapter = self.load_greek_chapter(self.book_name, self.chapter_num)
+        self.chapter = self.load_greek_chapter(self.book_dict[self.book_index], self.chapter_num)
 
         self.verse_num = 1
         self.num_chapters = 5
@@ -25,6 +27,13 @@ class FlashCardSet():
     def load_flashcard_set(self):
         self.flashcards = self.get_flashcard_set_verse_words(self.verse_num)
 
+
+    def update_book(self, book_index:int):
+        if(book_index > 0 and book_index <= len(self.book_dict.keys())):
+            self.book_index = book_index
+            self.update_chapter(number=1)            
+
+
     def update_verse(self, number:int):
         if(number > 0 and number <= self.chapter.num_verses()):
             self.verse_num = number
@@ -34,7 +43,7 @@ class FlashCardSet():
     def update_chapter(self, number:int):
         if(number > 0 and number <= self.num_chapters):
             self.chapter_num = int(number)
-            self.chapter = self.load_greek_chapter(self.book_name, self.chapter_num)
+            self.chapter = self.load_greek_chapter(self.book_dict[self.book_index], self.chapter_num)
             self.verse_num = 1
             self.num_verses = self.chapter.num_verses()
             self.load_flashcard_set()
@@ -107,7 +116,7 @@ class FlashCardSet():
                                              front_type=FlashCardContent.IMAGE))
             
     def load_greek_chapter(self, book_name:str, chapter_num:int)->Chapter:
-        file_path = f"src/text/{book_name.lower().replace(" ","")}{str(chapter_num)}.txt"
+        file_path = f"src/text/{book_name.lower().replace(" ","")}/{str(chapter_num)}.txt"
         with open(file_path, encoding='utf8') as f:
             txt = f.read()
         
