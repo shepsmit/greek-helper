@@ -11,14 +11,18 @@ class FlashCardSet():
         # self.chapter.printChapter()
 
         self.book_dict = {1:"1 John",
-                          2:"2 John"}
+                          2:"2 John",
+                          3:"3 John",
+                          4:"John",}
         self.book_index = 1
-        self.chapter_num = 2
-        self.chapter = self.load_greek_chapter(self.book_dict[self.book_index], self.chapter_num)
 
+        self.book = self.load_greek_book(self.book_dict[self.book_index])
+
+
+        self.chapter_num = 1
         self.verse_num = 1
-        self.num_chapters = 5
-        self.num_verses = self.chapter.num_verses()
+        self.num_chapters = self.book.num_chapters
+        self.num_verses = self.book.chapter.num_verses()
         self.flashcards = None
 
         self.load_flashcard_set()
@@ -31,30 +35,31 @@ class FlashCardSet():
     def update_book(self, book_index:int):
         if(book_index > 0 and book_index <= len(self.book_dict.keys())):
             self.book_index = book_index
+            self.book = self.load_greek_book(self.book_dict[self.book_index])
             self.update_chapter(number=1)            
 
 
     def update_verse(self, number:int):
-        if(number > 0 and number <= self.chapter.num_verses()):
+        if(number > 0 and number <= self.book.chapter.num_verses()):
             self.verse_num = number
             self.load_flashcard_set()
 
 
     def update_chapter(self, number:int):
-        if(number > 0 and number <= self.num_chapters):
+        if(number > 0 and number <= self.book.num_chapters):
             self.chapter_num = int(number)
-            self.chapter = self.load_greek_chapter(self.book_dict[self.book_index], self.chapter_num)
+            self.book.chapter = self.load_greek_chapter(self.book_dict[self.book_index], self.chapter_num)
             self.verse_num = 1
-            self.num_verses = self.chapter.num_verses()
+            self.num_verses = self.book.chapter.num_verses()
             self.load_flashcard_set()
 
     def next_verse(self):
         # Go to the next verse
-        if(self.verse_num < self.num_verses):
+        if(self.verse_num < self.book.chapter.num_verses()):
             self.update_verse(self.verse_num + 1)
         else:
             # Go to the next chapter
-            if(self.chapter_num < self.num_chapters):
+            if(self.chapter_num < self.book.num_chapters):
                 self.update_chapter(self.chapter_num + 1)
         
     def previous_verse(self):
@@ -69,14 +74,14 @@ class FlashCardSet():
 
     def get_flashcard_set_chapter_words(self)-> list:
         set = []
-        for verse_item in self.chapter.verses.items():
+        for verse_item in self.book.chapter.verses.items():
             verse_num = verse_item[0]
             set += self.get_flashcard_set_verse_words(verse_num)
         return set
                 
     def get_flashcard_set_verse_words(self, verse_num: int)->list:
         set = []
-        verse = self.chapter.verses[verse_num]
+        verse = self.book.chapter.verses[verse_num]
         for word in verse.words:
             parsed_word = self.greek_parser.get_parsed_inflected(word)
             fc = FlashCard()
@@ -115,6 +120,18 @@ class FlashCardSet():
                                              front=f'src.images/{f}',
                                              front_type=FlashCardContent.IMAGE))
             
+
+    def load_greek_book(self, book_name:str)->Book:
+        b = Book(book_name=book_name)
+        # Get number of chapters
+        file_path = f"src/text/{book_name.lower().replace(" ","")}"
+        _, _, chapter_files = next(os.walk(file_path))
+        b.num_chapters = len(chapter_files)
+        # Assign the current chapter to the first one
+        b.chapter = self.load_greek_chapter(book_name, 1)
+        return b
+
+
     def load_greek_chapter(self, book_name:str, chapter_num:int)->Chapter:
         file_path = f"src/text/{book_name.lower().replace(" ","")}/{str(chapter_num)}.txt"
         with open(file_path, encoding='utf8') as f:

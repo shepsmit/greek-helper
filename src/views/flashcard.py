@@ -145,8 +145,13 @@ class ViewFlashCard():
 
             self.update_flag_chapter = True # avoid double updates
             self.update_flag_verse = True # avoid double updates
+            self.chapter_select.options = list(range(1,self.system.book.num_chapters+1))
             self.chapter_select.value = self.system.chapter_num
+            self.chapter_select.update()
+
             self.verse_select.value = self.system.verse_num
+            self.verse_select.options = list(range(1,self.system.book.chapter.num_verses()+1))
+            self.verse_select.update()
 
             self.reset_flashcard_view()
 
@@ -173,10 +178,15 @@ class ViewFlashCard():
         if(self.flashcard_container != None):
             self.system.next_verse()
 
+            # Update the Select Elements
             self.update_flag_chapter = True # avoid double updates
             self.update_flag_verse = True # avoid double updates
+            self.chapter_select.options = list(range(1,self.system.num_chapters+1))
             self.chapter_select.value = self.system.chapter_num
+
             self.verse_select.value = self.system.verse_num
+            self.verse_select.options = list(range(1,self.system.num_verses+1))
+
 
             self.reset_flashcard_view()
     
@@ -187,8 +197,11 @@ class ViewFlashCard():
 
             self.update_flag_chapter = True # avoid double updates
             self.update_flag_verse = True # avoid double updates
+            self.chapter_select.options = list(range(1,self.system.num_chapters+1))
             self.chapter_select.value = self.system.chapter_num
+
             self.verse_select.value = self.system.verse_num
+            self.verse_select.options = list(range(1,self.system.num_verses+1))
 
             self.reset_flashcard_view()
 

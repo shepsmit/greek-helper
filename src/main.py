@@ -13,4 +13,4 @@ referenceView = ViewReference()
 songsView = ViewSongs()
 
 ## Start up the UI
-ui.run(port=8082, title='Greek Helper')
+ui.run(port=443, title='Greek Helper')

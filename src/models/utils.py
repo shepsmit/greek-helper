@@ -73,6 +73,8 @@ class FlashCardSide(Enum):
     FRONT = 0
     BACK = 1
 
+
+
 @dataclass
 class Chapter:
     book_name: str = ""
@@ -86,7 +88,11 @@ class Chapter:
     def num_verses(self)->int:
         return len(self.verses.keys())
 
-
+@dataclass
+class Book:
+    book_name: str = ""
+    num_chapters: int = None
+    chapter: Chapter = None
 
 @dataclass
 class Verse:

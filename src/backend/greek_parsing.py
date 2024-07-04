@@ -20,7 +20,7 @@ class GreekParser():
         # new_word = True
         new_word = False
         if(new_word):
-            entry = InflectedWord(inflection="ἐστιν", lemma="ειμί", parsing="3rd sg pres act ind", translation="we will be")
+            entry = InflectedWord(inflection="τίνος", lemma="τίν", parsing="sg gen mas", translation="whose?")
             self.new_lemma_manual(entry)
 
     def new_lemma_manual(self, entry: InflectedWord):
