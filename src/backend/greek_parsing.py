@@ -15,12 +15,12 @@ class GreekParser():
     def __init__(self):
         self.db = DatabaseInterface()
 
-        self.d = self.load_lemma_map()
+        # self.d = self.load_lemma_map()
 
         # new_word = True
         new_word = False
         if(new_word):
-            entry = InflectedWord(inflection="τίνος", lemma="τίν", parsing="sg gen mas", translation="whose?")
+            entry = InflectedWord(inflection="ἕν", lemma="ἐν", parsing="indecl", translation="in")
             self.new_lemma_manual(entry)
 
     def new_lemma_manual(self, entry: InflectedWord):
