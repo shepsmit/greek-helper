@@ -10,7 +10,17 @@ from models.utils import *
 # Common Words
 article_list = ["ὁ","τοῦ","τοῖς","τῆς","αἱ" ]
 
-eimi_list = ["ἦν","ἔστιν","ἐστιν","ἐστίν","ἔστιν·","ἐστὶν","ἐσμεν·","εἶναι","ἐστε"]
+pronoun_1_2_list = ["ἐγώ","ἡμᾶς","ἡμεῖς","ἡμῶν", "ἡμῖν", "ὑμῖν","ὑμεῖς","μου"]
+pronoun_3_list = ["αὐτός","αὐτός", "αὐτοῦ","αὐτῷ",]
+relative_pronoun_list = ["ὃ","ὅς","ὅστις","ἐκεῖνος","οὗτος"]
+conjunctions = ["καί","ἵνα","οὐ","ὡς","καί","μή","οὐδέ","καθώς","ὅτι"]
+common = ["εἰ"]
+prepositions = ["μετά","ἀπό","ἐν","πρός","περί","ἀλλά","ὅτι","ἄν","διά","εἰς"]
+names = ["Ἰησοῦς"]
+eimi_list = ["ειμί","ἦν","ἔστιν","ἐστιν","ἐστίν","ἔστιν·","ἐστὶν","ἐσμεν·","εἶναι","ἐστε"]
+
+SKIP_WORDS = common + article_list + eimi_list + pronoun_1_2_list + pronoun_3_list + relative_pronoun_list + prepositions + names + conjunctions
+
 class GreekParser():
     def __init__(self):
         self.db = DatabaseInterface()
@@ -69,14 +79,14 @@ class GreekParser():
             for entry in inflected_entries:
                 self.db.insert_inflected(entry)
 
-    def get_parsed_inflected(self, inflected_word:str)->InflectedWord:
+    def get_parsed_inflected(self, book_name, chapter_num, inflected_word:str)->InflectedWord:
         # Check for article
         if (inflected_word.lower() in article_list):
             return self.parse_article(inflected_word.lower())
         elif (inflected_word.lower() in eimi_list):
             return self.parse_eimi(inflected_word.lower())
         # Find word in database
-        word = self.db.parse_inflected(inflected_word)['value']
+        word = self.db.parse_inflected(book_name.replace(" ",""), chapter_num, inflected_word)['value']
         # print(f'{word.inflection} {word.lemma}')
         return word
 

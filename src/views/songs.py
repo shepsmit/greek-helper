@@ -9,7 +9,7 @@ class ViewSongs():
     def setupView(self):
         @ui.page('/songs')
         def page_index():
-            with navbar('Songs'):
+            with navbar('Songs', self.system):
                 ### Header ###
                 with ui.row().classes('w-full'):
                     with ui.card():

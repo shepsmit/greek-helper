@@ -23,8 +23,18 @@ class InflectedWord:
     voice: Voice = None
     person: Person = None
 
-    def parseQuery(self, query: list):
+    def copyQuery(self,query: list):
         """Parse a SQLLite query response into individual parameters"""
+        self.id                 = int(query[0])
+        self.inflection         = str(query[1].decode("utf-8"))
+        self.lemma              = str(query[2].decode("utf-8"))
+        self.uncontracted_form  = str(query[3].decode("utf-8"))
+        self.parsing            = str(query[4])
+        self.translation        = str(query[5])
+        self.verse              = str(query[6])
+
+    def parseQuery(self, query: list):
+        """Parse a SQLLite query response into individual parameters with filtering"""
         self.id                 = int(query[0])
         self.inflection         = str(query[1].decode("utf-8"))
         if("," in self.inflection):

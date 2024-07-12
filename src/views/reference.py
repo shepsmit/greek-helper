@@ -9,7 +9,7 @@ class ViewReference():
     def setupView(self):
         @ui.page('/reference')
         def page_index():
-            with navbar('Reference'):
+            with navbar('Reference', self.system):
                 ### Header ###
                 with ui.row().classes('w-full items-center'):
                     ui.image("src/images/ref/article.png").classes("w-1/3")
