@@ -9,9 +9,6 @@ class ViewVocab():
     def __init__(self, system):
         self.flashcard_container = None
         self.system = system
-
-        
-
         self.update_flag_chapter = False
 
         self.setupView()
@@ -65,8 +62,8 @@ class ViewVocab():
         with ui.row() as self.flashcard_container:
             for f in self.system.flashcards:
                 card_class_str = "items-center"
-                with ui.card().classes(card_class_str):
-                    FlashCardContainer(flashcard=f, class_str="w-24 h-24 text-center")
+                with ui.card().classes(card_class_str).tight():
+                    FlashCardContainer(flashcard=f, class_str="w-48 h-48 text-center")
                     
 
     def setupView(self):

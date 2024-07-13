@@ -214,7 +214,7 @@ class FlashCardSet():
         for i, v_text in enumerate(verses_text):
             
             v_new = Verse(text=v_text)
-            v_text = v_text.replace(",","").replace(".","").strip()
+            v_text = v_text.replace(",","").replace(".","").replace("[","").replace("]","").replace("}","").replace("{","").strip()
             v_words = v_text.split(" ")
             v_new.words = v_words
             c.verses[i+1] = v_new
