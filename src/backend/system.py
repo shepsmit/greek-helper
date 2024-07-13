@@ -107,7 +107,7 @@ class FlashCardSet():
         lemmas_unique = []
         [lemmas_unique.append(x) for x in lemmas if x not in lemmas_unique]
         # Limit to 10
-        lemmas_unique = lemmas_unique[:100]
+        lemmas_unique = lemmas_unique[:110]
 
         # With the remaining lemmas, generate the flashcard set
         set = self.get_flashcard_set_verse_words_lemma(lemmas_unique)
