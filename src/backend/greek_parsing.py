@@ -8,6 +8,7 @@ import csv
 from models.utils import *
 
 # https://myluthernet.luthersem.edu/ICS/icsfs/PrincipalPartsAlpha.pdf?target=a5b23532-b3ac-4ce9-b8e7-92d110d5414b
+    # Present, Future, Aorist Act/Mid, Perfect Act, Perfect Mid/Pas, Aorist Pas
 principal_parts = {
     "λέγω" : "λέγω, ἐρῶ, εἶπον, εἴρηκα, εἴρημαι, ἐρρέθην",
     "ἔχω" : "ἔχω, ἕξω, ἔσχον, ἔσχηκα, -, -",
