@@ -4,7 +4,7 @@ import csv
 import os
 import re
 from nicegui import ui, run
-
+from collections import OrderedDict
 
 class FlashCardSet():
     def __init__(self):
@@ -103,11 +103,14 @@ class FlashCardSet():
         set = []
         # Get all the lemmas in this book chapter
         lemmas = self.greek_parser.get_cached_lemmas(self.book.book_name, self.chapter_num)
+        # remove duplicates
+        lemmas_unique = []
+        [lemmas_unique.append(x) for x in lemmas if x not in lemmas_unique]
         # Limit to 10
-        lemmas = lemmas[:10]
+        lemmas_unique = lemmas_unique[:100]
 
         # With the remaining lemmas, generate the flashcard set
-        set = self.get_flashcard_set_verse_words_lemma(lemmas)
+        set = self.get_flashcard_set_verse_words_lemma(lemmas_unique)
         return set
     
     def append_lemmas(self, verse_num: int)->list:
@@ -130,8 +133,6 @@ class FlashCardSet():
         set = []
         # Build the flashcards   
         for word in lemmas:
-            if(word.lemma in principal_parts.keys()):
-                word.lemma = principal_parts[word.lemma]
 
             fc = FlashCard()
             
@@ -144,7 +145,11 @@ class FlashCardSet():
                 fc.front=word.lemma 
                 fc.front_type=FlashCardContent.TEXT 
 
-            fc.back=word.lemma 
+            if(word.lemma in principal_parts.keys()):
+                fc.back=principal_parts[word.lemma]
+            else:
+                fc.back=word.lemma 
+
             fc.back_type=FlashCardContent.TEXT
 
             set.append(fc)

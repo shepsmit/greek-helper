@@ -7,6 +7,10 @@ from storage.sqllite_config import *
 import csv
 from models.utils import *
 
+principal_parts = {
+    "γίνομαι":"(ἐγινόμην), γενήσομαι, ἐγενόμην, γέγονα, γεγένημαι, ἐγενήθην"
+}
+
 # Common Words
 article_list = ["ὁ","τοῦ","τοῖς","τῆς","αἱ" ]
 
