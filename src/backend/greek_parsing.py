@@ -33,6 +33,10 @@ class GreekParser():
             entry = InflectedWord(inflection="ἕν", lemma="ἐν", parsing="indecl", translation="in")
             self.new_lemma_manual(entry)
 
+    def get_cached_lemmas(self, book:str, chapter_num:int)->list:
+        return self.db.get_lemmas(book,chapter_num)
+
+
     def new_lemma_manual(self, entry: InflectedWord):
         self.db.insert_inflected(entry)
 

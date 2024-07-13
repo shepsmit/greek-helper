@@ -135,3 +135,19 @@ class InflectedWord:
                 self.translation,
                 self.verse            
         ]
+
+
+@dataclass
+class Lemma:
+    """
+    SQLLite Database Version Table Interface
+    """
+    lemma: str = ""
+
+    def parseQuery(self, query: list):
+        """Parse a SQLLite query response into individual parameters with filtering"""
+        self.lemma              = str(query[0].decode("utf-8"))
+        if ("or" in self.lemma):
+            self.lemma = self.lemma.split(" ")[0]
+        if ("," in self.lemma):
+            self.lemma = self.lemma.split(",")[0]

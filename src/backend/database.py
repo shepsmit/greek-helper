@@ -28,6 +28,25 @@ class DatabaseInterface():
         
         return word_converted
 
+    def get_lemmas(self, book_name:str, chapter_num:int)->list:
+        try:
+            book_name = book_name.replace(" ","")
+            db = SQL_Database(DB_PATH_NT)
+            db_response = db.run_query(f"SELECT lemma FROM [c{book_name}{chapter_num}]")
+            # print(f"Cache Response {len(db_response)}")
+            # print(db_response)
+            if(len(db_response)>0):
+                lemma_list = []
+                for r in db_response:
+                    lemma = Lemma()
+                    lemma.parseQuery(r)
+                    lemma_list.append(lemma)
+                
+                return lemma_list
+
+        except:
+            return []
+
     def parse_inflected(self, book_name:str, chapter_num:int, inflected:str)->dict:
         response_dict = {'value': None,
                          'error': SQLliteStatus.SQLLITE_STATUS_OK}

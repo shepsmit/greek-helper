@@ -32,6 +32,7 @@ class SQL_Database:
             res = self.cur.execute(query,tuple(params)).fetchall()
             return res
         else:
+            print("SQLLITE: RUn Query Params param error")
             return ["DB_QUERY_PARAM_ERROR"]
     
     def _execute_statement(self, statement):

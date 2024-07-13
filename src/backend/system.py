@@ -1,5 +1,5 @@
 from models.utils import *
-from backend.greek_parsing import GreekParser, SKIP_WORDS
+from backend.greek_parsing import GreekParser, SKIP_WORDS, principal_parts
 import csv
 import os
 import re
@@ -101,16 +101,19 @@ class FlashCardSet():
 
     def get_flashcard_set_chapter_words(self)-> list:
         set = []
-        self.lemmas = []
-        for verse_item in self.book.chapter.verses.items():
-            verse_num = verse_item[0]
-            set += self.get_flashcard_set_verse_words_lemma(verse_num)
-        return set
+        # Get all the lemmas in this book chapter
+        lemmas = self.greek_parser.get_cached_lemmas(self.book.book_name, self.chapter_num)
+        # Limit to 10
+        lemmas = lemmas[:10]
 
-    def get_flashcard_set_verse_words_lemma(self, verse_num: int)->list:
-        set = []
+        # With the remaining lemmas, generate the flashcard set
+        set = self.get_flashcard_set_verse_words_lemma(lemmas)
+        return set
+    
+    def append_lemmas(self, verse_num: int)->list:
         verse = self.book.chapter.verses[verse_num]
         
+        # Collect all the words
         for word in verse.words:
             parsed_word = self.greek_parser.get_parsed_inflected(self.book.book_name, self.chapter_num, word)
             # Don't put all of them in. Skip the most common words
@@ -121,30 +124,30 @@ class FlashCardSet():
                 pass
             else:
                 self.lemmas.append(parsed_word.lemma)
-                
-                fc = FlashCard()
-                
-                if os.path.exists(f'src/images/{parsed_word.lemma}.png'):
-                    fc.front=f'src/images/{parsed_word.lemma}.png' 
-                    fc.front_type=FlashCardContent.IMAGE
-                    # print(f'\tsrc/images/{parsed_word.lemma}.png')
 
-                else:
-                    fc.front=parsed_word.lemma 
-                    fc.front_type=FlashCardContent.TEXT 
 
-                fc.back=parsed_word.lemma 
-                fc.back_type=FlashCardContent.TEXT
+    def get_flashcard_set_verse_words_lemma(self, lemmas:list)->list:
+        set = []
+        # Build the flashcards   
+        for word in lemmas:
+            if(word.lemma in principal_parts.keys()):
+                word.lemma = principal_parts[word.lemma]
 
-                fc.gender = parsed_word.gender
-                fc.case = parsed_word.case
-                fc.number = parsed_word.number
-                fc.tense = parsed_word.tense
-                fc.mood = parsed_word.mood
-                fc.voice = parsed_word.voice
-                fc.person = parsed_word.person
+            fc = FlashCard()
+            
+            if os.path.exists(f'src/images/{word.lemma}.png'):
+                fc.front=f'src/images/{word.lemma}.png' 
+                fc.front_type=FlashCardContent.IMAGE
+                # print(f'\tsrc/images/{parsed_word.lemma}.png')
 
-                set.append(fc)
+            else:
+                fc.front=word.lemma 
+                fc.front_type=FlashCardContent.TEXT 
+
+            fc.back=word.lemma 
+            fc.back_type=FlashCardContent.TEXT
+
+            set.append(fc)
                 
         return set
 
